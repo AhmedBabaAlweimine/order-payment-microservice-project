@@ -1,0 +1,101 @@
+# -------------------------------
+# PersistentVolumeClaim (PVC)
+# -------------------------------
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-order-payment-pvc-claim                # The name of the PVC (used later by Deployment)
+  labels:
+    app: mysql-order-payment                   # Label to identify resources belonging to MySQL
+    tier: database
+spec:
+  accessModes:
+    - ReadWriteOnce              # Volume can be mounted as read-write by a single node
+  resources:
+    requests:
+      storage: 1Gi               # Request 1GB of persistent storage for MySQL data
+
+  #---
+  # -------------------------------
+  # Secret
+  # -------------------------------
+  #apiVersion: v1
+  #kind: Secret
+  #metadata:
+  # name: mysql-secret             # Secret name (referenced by Deployment env vars)
+  #type: Opaque
+  #stringData:
+  # mysql-root-password: "your_strong_password_here" # Root password stored securely as a Secret
+
+---
+# -------------------------------
+# Deployment
+# -------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-order-payment                   # Name of the Deployment managing MySQL pods
+  labels:
+    app: mysql-order-payment                   # Labels for resource grouping
+    tier: database
+spec:
+  selector:
+    matchLabels:
+      app: mysql-order-payment                 # Deployment manages pods with this label
+      tier: database
+  strategy:
+    type: Recreate               # Ensures pod is fully restarted on updates (good for DBs)
+  template:
+    metadata:
+      labels:
+        app: mysql-order-payment               # Pod will carry the same label (for Service matching)
+        tier: database
+    spec:
+      containers:
+        - image: mysql:8.0       # MySQL Docker image (version 8.0)
+          name: mysql-order-payment
+          imagePullPolicy: IfNotPresent   #first search in local repo,if not specified alway will look in docker hub
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              #value: root  #instead of hard codding your user here and make you app insecure ,use secret map
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret  #this should match name in meta data of your mysql-secrets.yaml mysql
+                  key: password
+            - name: MYSQL_DATABASE
+              #value: ahmed   #instead of hard codding your data base name  here  ,fetch it from  configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config  #this should match name in meta data of your mysql-configMap.yaml mysql
+                  key: dbName
+          ports:
+            - containerPort: 3306  # Expose MySQL default port inside the container
+              name: mysql-order-payment
+          volumeMounts:
+            - name: mysql-order-payment-persistent-storage
+              mountPath: /var/lib/mysql  # Where MySQL stores its data files
+      volumes:
+        - name: mysql-order-payment-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-order-payment-pvc-claim # Attach the PVC defined earlier for persistence
+
+---
+# -------------------------------
+# Service
+# -------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-order-payment-service            # Service name (used for DNS discovery inside cluster)
+  labels:
+    app: mysql-order-payment
+    tier: database
+spec:
+  ports:
+    - port: 3306                 # Port exposed by the Service
+      targetPort: 3306           # Port the MySQL container listens on
+  selector:
+    app: mysql-order-payment       # Routes traffic to pods with label app=mysql
+    tier: database
+  clusterIP: None                # Headless service (no clusterIP assigned)
+  # Useful for direct pod access or StatefulSets
