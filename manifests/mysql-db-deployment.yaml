@@ -15,18 +15,6 @@ spec:
     requests:
       storage: 1Gi               # Request 1GB of persistent storage for MySQL data
 
-  #---
-  # -------------------------------
-  # Secret
-  # -------------------------------
-  #apiVersion: v1
-  #kind: Secret
-  #metadata:
-  # name: mysql-secret             # Secret name (referenced by Deployment env vars)
-  #type: Opaque
-  #stringData:
-  # mysql-root-password: "your_strong_password_here" # Root password stored securely as a Secret
-
 ---
 # -------------------------------
 # Deployment
@@ -60,17 +48,17 @@ spec:
               #value: root  #instead of hard codding your user here and make you app insecure ,use secret map
               valueFrom:
                 secretKeyRef:
-                  name: mysql-secret  #this should match name in meta data of your mysql-secrets.yaml mysql
+                  name: mysql-secret-order-payment-app  #this should match name in meta data of your mysql-secrets.yaml mysql
                   key: password
             - name: MYSQL_DATABASE
               #value: ahmed   #instead of hard codding your data base name  here  ,fetch it from  configMap
               valueFrom:
                 configMapKeyRef:
-                  name: db-config  #this should match name in meta data of your mysql-configMap.yaml mysql
+                  name: db-order-payment-config  #this should match name in meta data of your mysql-configMap.yaml mysql
                   key: dbName
           ports:
             - containerPort: 3306  # Expose MySQL default port inside the container
-              name: mysql-order-payment
+              name: dbcommon #before was: mysql-order-payment
           volumeMounts:
             - name: mysql-order-payment-persistent-storage
               mountPath: /var/lib/mysql  # Where MySQL stores its data files
@@ -92,10 +80,11 @@ metadata:
     tier: database
 spec:
   ports:
-    - port: 3306                 # Port exposed by the Service
+    - port: 3307                 # Port exposed by the Service
       targetPort: 3306           # Port the MySQL container listens on
+
   selector:
     app: mysql-order-payment       # Routes traffic to pods with label app=mysql
     tier: database
-  clusterIP: None                # Headless service (no clusterIP assigned)
+  type: ClusterIP
   # Useful for direct pod access or StatefulSets

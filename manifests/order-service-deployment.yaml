@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment #kind Deployment
+metadata:
+  name: order-ms-app-deployement-kubernate
+spec:
+  selector:
+    matchLabels:
+      app: order-ms-app
+  replicas: 2 # Desired number of pod replicas
+  template:
+    metadata:
+      labels:
+        app: order-ms-app
+    spec:
+      containers:
+        - name: order-ms-app
+          image: order-service:latest # Nginx image from Docker Hub
+          imagePullPolicy: IfNotPresent   #first search in local repo,if not specified alway will look in docker hub
+          ports:
+            - containerPort: 8081 # Port the container exposes
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: db-order-payment-config  #this should match name in meta data of your mysql-configMap.yaml mysql
+                  key: host
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: db-order-payment-config  #this should match name in meta data of your mysql-configMap.yaml mysql
+                  key: dbName
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: db-order-payment-config  #this should match name in meta data of your mysql-configMap.yaml mysql
+                  key: port
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret-order-payment-app  #this should match name in meta data of your mysql-secrets.yaml mysql
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret-order-payment-app  #this should match name in meta data of your mysql-secrets.yaml mysql
+                  key: password
+
+---
+
+apiVersion: v1
+kind: Service  #kind service
+metadata:
+  name: order-ms-app-service  # any name here
+spec:
+  selector:
+    app: order-ms-app  #this should be same as deployment selector name
+  ports:
+    - protocol: "TCP"
+      port: 8181
+      targetPort: 8081  #this should be same as the Port where the  container exposes up
+  type: NodePort
