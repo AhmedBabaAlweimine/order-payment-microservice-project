@@ -1,19 +1,7 @@
+#--------PROD CONFIG -------------------------------##########
 server:
   port: 8082
 
-#--------DEV CONFIG -------------------------------##########
-#spring:
-#  application:
-#    name: payment-service
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/imdbnaukri
-#    username: root
-#    password: ahmed
-#---------END DEV CONFIG------------------------------------####
-
-
-#--------PROD CONFIG -------------------------------##########
 spring:
   application:
     name: payment-service
@@ -29,7 +17,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
-#---------END PROD CONFIG------------------------------------####
 
 eureka:
   client:
