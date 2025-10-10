@@ -56,6 +56,6 @@ spec:
     app: order-ms-app  #this should be same as deployment selector name
   ports:
     - protocol: "TCP"
-      port: 8181
+      port: 8081
       targetPort: 8081  #this should be same as the Port where the  container exposes up
   type: NodePort
