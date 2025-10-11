@@ -35,7 +35,7 @@ public class OrderService {
         paymentDto.setAmount(orderEntity.getPrice());
         //call Payement service to save payement
         ResponseEntity<PaymentDto> PaymentDtoResponseEntity
-                = restTemplate.postForEntity("http://PAYMENT-SERVICE/payement/doPayment", paymentDto, PaymentDto.class);
+                = restTemplate.postForEntity("http://PAYMENT-SERVICE/payment/doPayment", paymentDto, PaymentDto.class);
         paymentDto = PaymentDtoResponseEntity.getBody();
         String message = paymentDto.getStatus().equalsIgnoreCase("success")
                 ? "payement passed" : "payment failed";

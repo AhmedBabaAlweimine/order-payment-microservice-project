@@ -29,4 +29,8 @@ public class PaymentService {
     public String payementProcessing() {
         return new Random().nextBoolean() ? "success" : "failed";
     }
+
+    public PaymentDto getPaymentByOrderId(Long orderId) {
+        return modelMapper.map(paymentRepo.findByOrderId(orderId), PaymentDto.class);
+    }
 }

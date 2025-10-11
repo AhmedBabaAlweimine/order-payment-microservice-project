@@ -1,0 +1,8 @@
+#--------DEV CONFIG -------------------------------##########
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://registry-ms-app-service:8761/eureka/

@@ -4,13 +4,10 @@ import com.alweimine.paymentservice.dto.PaymentDto;
 import com.alweimine.paymentservice.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/payement")
+@RequestMapping("/payment")
 public class PaymentController {
     @Autowired
     private PaymentService paymentService;
@@ -18,5 +15,11 @@ public class PaymentController {
     @PostMapping("doPayment")
     public ResponseEntity<PaymentDto> processPayment(@RequestBody PaymentDto paymentDto) {
         return ResponseEntity.ok().body(paymentService.doPayment(paymentDto));
+    }
+
+
+    @GetMapping("/{orderId}")
+    public ResponseEntity<PaymentDto> getPaymentByOrderId(@PathVariable Long orderId) {
+        return ResponseEntity.ok().body(paymentService.getPaymentByOrderId(orderId));
     }
 }

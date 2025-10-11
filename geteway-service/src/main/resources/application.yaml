@@ -1,0 +1,20 @@
+server:
+  port: 8989
+
+spring:
+  profiles:
+    active: prod
+  application:
+    name: geteway-service
+  cloud:
+    gateway:
+      routes:
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/order/**
+        - id: payment-service
+          uri: lb://payment-service
+          predicates:
+            - Path=/payment/**
+
