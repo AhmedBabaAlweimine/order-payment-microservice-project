@@ -1,6 +1,5 @@
 package com.alweimine.paymentservice.repository;
 
-import com.alweimine.paymentservice.dto.PaymentDto;
 import com.alweimine.paymentservice.entity.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
