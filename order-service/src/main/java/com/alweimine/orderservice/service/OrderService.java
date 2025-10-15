@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -45,7 +46,7 @@ public class OrderService {
 
     public List<OrderDto> getAllOrders() {
         List<Order> allOrdes = orderRepository.findAll();
-        return allOrdes.stream().map(order -> modelMapper.map(order, OrderDto.class)).toList();
+        return allOrdes.stream().map(order -> modelMapper.map(order, OrderDto.class)).collect(Collectors.toList());
     }
 
     public OrderDto geOrder(Long id) {

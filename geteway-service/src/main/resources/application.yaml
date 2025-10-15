@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: prod
+    active: dev
   application:
     name: geteway-service
   cloud:
@@ -13,8 +13,34 @@ spring:
           uri: lb://order-service
           predicates:
             - Path=/order/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: order-service
+                fallbackuri: forward:/orderFallback
+
         - id: payment-service
           uri: lb://payment-service
           predicates:
             - Path=/payment/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: payment-service
+                fallbackuri: forward:/paymentFallback
+
+#For Hystrix to expose its metrics stream for dashboarding, you must include
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000  #if the response not returned from service after 5 second redirect to fall back uri
 
