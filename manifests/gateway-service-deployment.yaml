@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment #kind Deployment
+metadata:
+  name: gateway-ms-app-deployement-kubernate
+spec:
+  selector:
+    matchLabels:
+      app: gateway-ms-app
+  replicas: 1 # Desired number of pod replicas
+  template:
+    metadata:
+      labels:
+        app: gateway-ms-app
+    spec:
+      containers:
+        - name: gateway-ms-app
+          image: gateway-service:latest # Nginx image from Docker Hub
+          imagePullPolicy: IfNotPresent   #first search in local repo,if not specified alway will look in docker hub
+          ports:
+            - containerPort: 8989 # Port the container exposes
+
+---
+
+apiVersion: v1
+kind: Service  #kind service
+metadata:
+  name: gateway-ms-app-service  # any name here
+spec:
+  selector:
+    app: gateway-ms-app  #this should be same as deployment selector name
+  ports:
+    - protocol: "TCP"
+      port: 8989
+      targetPort: 8989  #this should be same as the Port where the  container exposes up
+  type: NodePort
