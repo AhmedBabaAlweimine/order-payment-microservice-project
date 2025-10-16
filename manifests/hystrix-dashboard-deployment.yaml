@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment #kind Deployment
+metadata:
+  name: hystrix-dashboard-app-deployement-kubernate
+spec:
+  selector:
+    matchLabels:
+      app: hystrix-dashboard-app
+  replicas: 1 # Desired number of pod replicas
+  template:
+    metadata:
+      labels:
+        app: hystrix-dashboard-app
+    spec:
+      containers:
+        - name: hystrix-dashboard-app
+          image: hystrix-dashboard-service:latest # Nginx image from Docker Hub
+          imagePullPolicy: IfNotPresent   #first search in local repo,if not specified alway will look in docker hub
+          ports:
+            - containerPort: 9195 # Port the container exposes
+
+---
+
+apiVersion: v1
+kind: Service  #kind service
+metadata:
+  name: hystrix-dashboard-app-service  # any name here
+spec:
+  selector:
+    app: registry-ms-app  #this should be same as deployment selector name
+  ports:
+    - protocol: "TCP"
+      port: 9195
+      targetPort: 9195  #this should be same as the Port where the  container exposes up
+  type: NodePort
