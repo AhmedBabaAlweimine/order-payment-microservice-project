@@ -27,7 +27,7 @@ metadata:
   name: hystrix-dashboard-app-service  # any name here
 spec:
   selector:
-    app: registry-ms-app  #this should be same as deployment selector name
+    app: hystrix-dashboard-app #this should be same as deployment selector name
   ports:
     - protocol: "TCP"
       port: 9195
