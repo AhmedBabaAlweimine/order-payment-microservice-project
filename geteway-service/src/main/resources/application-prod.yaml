@@ -6,3 +6,6 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://registry-ms-app-service:8761/eureka/
+  instance:
+    prefer-ip-address: false           # ✅ ensures hostname is used, not pod IP
+    hostname: gateway-ms-app-service   # ✅ use your  payment K8s service name in deployement as hostname

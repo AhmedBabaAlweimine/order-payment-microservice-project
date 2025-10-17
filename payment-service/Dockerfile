@@ -1,4 +1,4 @@
-FROM openjdk:17
+FROM openjdk:8
 EXPOSE 8082
 LABEL authors="aalweimine"
 ADD target/payment-service-0.0.1-SNAPSHOT.jar  payment-service-0.0.1-SNAPSHOT.jar

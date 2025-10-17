@@ -1,4 +1,4 @@
-FROM openjdk:17
+FROM openjdk:8
 EXPOSE 8081
 LABEL authors="aalweimine"
 ADD target/order-service-0.0.1-SNAPSHOT.jar  order-service-0.0.1-SNAPSHOT.jar
