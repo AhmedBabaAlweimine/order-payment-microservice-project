@@ -10,7 +10,7 @@ minikube image load jenkins/jenkins:lts-jdk11
 this makes Docker socket point inside Minikube, so all images built by Jenkins appear directly in Minikube.
 ########################################################
 
-docker run -d \
+2- docker run -d \
   --name jenkins-container \
   -p 8080:8080 -p 50000:50000 \
   -v jenkins_home:/var/jenkins_home \
@@ -18,23 +18,25 @@ docker run -d \
   -v /usr/bin/docker:/usr/bin/docker \
   jenkins/jenkins:lts-jdk11
 
-2-docker run -p 8080:8080 -p 50000:50000 --name jenkins-container  jenkins/jenkins:lts-jdk11
-  if contrainer exist already : docker start jenkins-container
+if contrainer exist already : docker start jenkins-container
 3-take passwrd: 1d14765dd4b2455ebdc71ed6d43a94f1
 4-run localhost:8080 : if not working use in wsl terminal: hostname -I use one of IP+8080
 5-install pulgin enter user:ahmed,password:ahmed
 6-create pipe line , shouse github+maven
-7-coppy token(classic) from github to allow jenkins clone : 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 and add create new credentail in Jenkins: usernameGit and the tocken as pssword
+7-coppy token(classic) from github to allow jenkins clone repositories: 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 and add create new credentail in Jenkins: usernameGit and the tocken as pssword
 8-run build if you have problem with maven: 
-   option 1: first check if you have and make install automatic of jdk and maven in Global Tool Config:
+  
+ option 1: first check if you have and make install automatic of jdk and maven in Global Tool Config:
     tools {
         maven 'maven'    // Must match the name you set in Global Tool Config 
         jdk 'jdk11'      // Optional if using JDK 11
     }
+
   option 2: try to enter the container and install maven 
   a-docker exec -u 0 -it jenkins-container bash to enter container as root
   b-apt-get update
   c-apt-get install -y maven
+
 9-to schedule build after every push
   a-check: GitHub hook trigger for GITScm polling
   b-check: Poll SCM enter in Schedule :  * * * * *
@@ -55,60 +57,9 @@ docker run -d \
 
 
 
-
-
-def services = ['order-service', 'payment-service','geteway-service','hystrix-dashboard','service-registry']
-
-pipeline {
-    agent any
-    tools {
-        maven 'maven'   // Must match the name you set in Global Tool Config
-        jdk 'jdk11'      // Optional if using JDK 11
-        docker 'docker'
-    }
-    stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/AhmedBabaAlweimine/order-payment-microservice-project.git',
-                credentialsId: 'test'
-
-            }
-        }
-
-        stage('Build Microservices') {
-            steps {
-                script {
-                    services.each { svc ->
-                        dir("${svc}") {
-                            echo "Building ${svc}..."
-                            sh "mvn -B clean install -Dmaven.test.failure.ignore=true"
-                        }
-                    }
-                }
-            }
-        }
-        
-        stage('Build docker images') {
-            steps {
-                script {
-                    services.each { svc ->
-                        dir("${svc}") {
-                            echo "Building docker images for ${svc}..."
-                            sh "docker build -t ${svc}:latest"
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-
 ----to stop and delete containre--
 
 docker stop jenkins-container && docker rm jenkins-container
-
-
 
 ---------------------references:
 https://www.youtube.com/watch?v=PKcGy9oPVXg
