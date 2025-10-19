@@ -1,5 +1,6 @@
 package com.alweimine.getewayservice.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
@@ -8,12 +9,12 @@ import reactor.core.publisher.Mono;
 public class FallBackController {
 
     @RequestMapping("/orderFallback")
-    public Mono<String> orderServiceFallback() {
-        return Mono.just("Order service is taiking too long to response,Please try later");
+    public ResponseEntity<String> orderServiceFallback() {
+        return ResponseEntity.ok().body("Order service is taiking too long to response,Please try later");
     }
 
     @RequestMapping("/paymentFallback")
-    public Mono<String> paymentServiceFallback() {
-        return Mono.just("payment service is taiking too long to response,Please try later");
+    public ResponseEntity<String> paymentServiceFallback() {
+        return ResponseEntity.ok().body("payment service is taiking too long to response,Please try later");
     }
 }
