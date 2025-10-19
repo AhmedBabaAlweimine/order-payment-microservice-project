@@ -18,10 +18,10 @@ pipeline {
         stage('Build Microservices') {
             steps {
                 script {
-                    echo "building and install stage ..."
+                    echo "Building and install stage: ..."
                     services.each { svc ->
                         dir("${svc}") {
-                            echo "Building ${svc}..."
+                            echo "clean install ${svc}..."
                             sh "mvn -B clean install -Dmaven.test.failure.ignore=true"
                         }
                     }
@@ -32,11 +32,11 @@ pipeline {
         stage('Build docker images') {
             steps {
                 script {
-                    echo "building docker images stage..."
+                    echo "Building docker images stage: ..."
                     sh 'eval $(minikube docker-env)'
                     services.each { svc ->
                         dir("${svc}") {
-                            echo "Building docker images for ${svc}..."
+                            echo "Building docker image for ${svc}..."
                             sh "docker build -t ${svc}:latest ."
                         }
                     }
