@@ -8,17 +8,17 @@ pipeline {
     }
     stages {
         stage('Checkout') {
+            echo "Checkout repo..."
             steps {
                 git branch: 'main', url: 'https://github.com/AhmedBabaAlweimine/order-payment-microservice-project.git',
                 credentialsId: 'test'
-
             }
         }
 
         stage('Build Microservices') {
             steps {
                 script {
-                    sh 'eval $(minikube docker-env)'
+                    echo "building and install stage ..."
                     services.each { svc ->
                         dir("${svc}") {
                             echo "Building ${svc}..."
@@ -32,6 +32,8 @@ pipeline {
         stage('Build docker images') {
             steps {
                 script {
+                    echo "building docker images stage..."
+                    sh 'eval $(minikube docker-env)'
                     services.each { svc ->
                         dir("${svc}") {
                             echo "Building docker images for ${svc}..."
