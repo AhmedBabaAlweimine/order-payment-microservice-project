@@ -11,16 +11,31 @@ pipeline {
             steps {
                 git branch: 'main', url: 'https://github.com/AhmedBabaAlweimine/order-payment-microservice-project.git',
                 credentialsId: 'test'
+
             }
         }
 
         stage('Build Microservices') {
             steps {
                 script {
+                    sh 'eval $(minikube docker-env)'
                     services.each { svc ->
                         dir("${svc}") {
                             echo "Building ${svc}..."
                             sh "mvn -B clean install -Dmaven.test.failure.ignore=true"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Build docker images') {
+            steps {
+                script {
+                    services.each { svc ->
+                        dir("${svc}") {
+                            echo "Building docker images for ${svc}..."
+                            sh "docker build -t ${svc}:latest ."
                         }
                     }
                 }

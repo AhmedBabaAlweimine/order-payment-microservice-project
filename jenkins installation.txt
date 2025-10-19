@@ -1,4 +1,23 @@
 1-docker pull jenkins/jenkins:lts-jdk11
+
+#################Note###################
+if using those images builded by jenkin pipline :
+
+eval $(minikube docker-env)
+
+minikube image load jenkins/jenkins:lts-jdk11
+
+this makes Docker socket point inside Minikube, so all images built by Jenkins appear directly in Minikube.
+########################################################
+
+docker run -d \
+  --name jenkins-container \
+  -p 8080:8080 -p 50000:50000 \
+  -v jenkins_home:/var/jenkins_home \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /usr/bin/docker:/usr/bin/docker \
+  jenkins/jenkins:lts-jdk11
+
 2-docker run -p 8080:8080 -p 50000:50000 --name jenkins-container  jenkins/jenkins:lts-jdk11
   if contrainer exist already : docker start jenkins-container
 3-take passwrd: 1d14765dd4b2455ebdc71ed6d43a94f1
@@ -21,7 +40,17 @@
   b-check: Poll SCM enter in Schedule :  * * * * *
 
 
+10- install plugin for docker
+      0-docker
+      1-Docker Pipeline
+      2-docker-build-step
+      3-CloudBees Docker Build and Publish
 
+    if you get docker not working because permission denied:
+   -docker exec -u 0 -it jenkins-container bash
+   -getent group docker
+   -groupadd -g 1001 docker
+   -usermod -aG docker jenkins
 
 
 
@@ -33,8 +62,9 @@ def services = ['order-service', 'payment-service','geteway-service','hystrix-da
 pipeline {
     agent any
     tools {
-        maven 'maven'    // Must match the name you set in Global Tool Config
+        maven 'maven'   // Must match the name you set in Global Tool Config
         jdk 'jdk11'      // Optional if using JDK 11
+        docker 'docker'
     }
     stages {
         stage('Checkout') {
@@ -51,7 +81,20 @@ pipeline {
                     services.each { svc ->
                         dir("${svc}") {
                             echo "Building ${svc}..."
-                            sh "mvn -B clean package -Dmaven.test.failure.ignore=true"
+                            sh "mvn -B clean install -Dmaven.test.failure.ignore=true"
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage('Build docker images') {
+            steps {
+                script {
+                    services.each { svc ->
+                        dir("${svc}") {
+                            echo "Building docker images for ${svc}..."
+                            sh "docker build -t ${svc}:latest"
                         }
                     }
                 }
@@ -59,6 +102,13 @@ pipeline {
         }
     }
 }
+
+
+----to stop and delete containre--
+
+docker stop jenkins-container && docker rm jenkins-container
+
+
 
 ---------------------references:
 https://www.youtube.com/watch?v=PKcGy9oPVXg
