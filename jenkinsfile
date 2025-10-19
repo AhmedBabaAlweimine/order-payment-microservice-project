@@ -1,0 +1,30 @@
+def services = ['order-service', 'payment-service','geteway-service','hystrix-dashboard','service-registry']
+
+pipeline {
+    agent any
+    tools {
+        maven 'maven'   // Must match the name you set in Global Tool Config
+        jdk 'jdk11'      // Optional if using JDK 11
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/AhmedBabaAlweimine/order-payment-microservice-project.git',
+                credentialsId: 'test'
+            }
+        }
+
+        stage('Build Microservices') {
+            steps {
+                script {
+                    services.each { svc ->
+                        dir("${svc}") {
+                            echo "Building ${svc}..."
+                            sh "mvn -B clean install -Dmaven.test.failure.ignore=true"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
