@@ -1,11 +1,11 @@
 server:
-  port: 8082
+  port: 8081
 
 spring:
-  profiles:
-    active: dev
   application:
-    name: payment-service
+    name: order-service
+    #profiles:  #moved to bootstrap.yaml
+    #active: dev
 
   jpa:
     hibernate:
