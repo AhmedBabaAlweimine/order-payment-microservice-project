@@ -5,6 +5,13 @@ spring:
   profiles:
     active: dev
 
+  #cloud:
+  #  config:
+  #    uri: http://localhost:9196
+
   cloud:
     config:
-      uri: http://localhost:9196
+      discovery:
+        enabled: true
+        service-id: cloud-config-server   # this let order service get cloud-config-server from euraka server automatically ,no need to give server config url
+      fail-fast: true
