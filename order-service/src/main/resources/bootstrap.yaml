@@ -1,5 +1,7 @@
 #to fetch config from our cloud-config-server service
 spring:
+  application:
+    name: order-service
   profiles:
     active: dev
 

@@ -9,6 +9,7 @@ spring:
       server:
         git:
           uri: https://github.com/AhmedBabaAlweimine/order-payment-microservice-project
+          search-paths: profiles-cloud-config-server
           default-label: feature/CONF-502
 
 eureka:
