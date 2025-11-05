@@ -1,20 +1,18 @@
 #dev
+#eureka:
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka
+
+#prod
 eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka
-#prod
-#eureka:
- # client:
-  #  register-with-eureka: true
-   # fetch-registry: true
-    #service-url:
-     # defaultZone: http://registry-ms-app-service:8761/eureka/
-  #instance:
-   # prefer-ip-address: false           # ✅ ensures hostname is used, not pod IP
-    #hostname: order-ms-app-service   # ✅ use your  payment K8s service name in deployement as hostname
+      defaultZone: http://registry-ms-app-service:8761/eureka/
 
 
 microservices:

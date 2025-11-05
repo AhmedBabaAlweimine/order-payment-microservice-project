@@ -3,7 +3,8 @@ spring:
   application:
     name: order-service
   profiles:
-    active: prod
+    active:
+    - prod
 
   #cloud:
   #  config:
