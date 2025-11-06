@@ -8,11 +8,6 @@ spring:
 
 #resolve the issue that gateway is not aple to comminicate to Order-service after implementing spring config cloud server
 eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: ${eureka.client.service-url.defaultZone}  # from Cloud Config Server
   instance:
     prefer-ip-address: false           # ✅ ensures hostname is used, not pod IP
     hostname: order-ms-app-service   # ✅ use your  order-ms-app-servicet K8s service name in deployement as hostname
