@@ -6,7 +6,7 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
-#resolve the issue that gateway is not aple to comminicate to Order-service after implementing spring config cloud server
+
 eureka:
   instance:
     prefer-ip-address: false           # ✅ ensures hostname is used, not pod IP
