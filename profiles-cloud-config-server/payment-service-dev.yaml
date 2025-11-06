@@ -1,0 +1,8 @@
+#--------DEV CONFIG -------------------------------##########
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/imdbnaukri
+    username: root
+    password: ahmed
