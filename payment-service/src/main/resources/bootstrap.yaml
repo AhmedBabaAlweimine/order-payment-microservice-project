@@ -1,14 +1,14 @@
 #to fetch config from our cloud-config-server service
 spring:
   application:
-    name: order-service
+    name: payment-service
   profiles:
     active:
     - prod
 
   cloud:
     config:
-      uri:  http://cloud-config-server-ms-app-service:9196/ #http://localhost:9196/
+      uri:  http://cloud-config-server-ms-app-service:9196/  #http://localhost:9196/
 
   #cloud:
   #  config:
