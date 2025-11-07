@@ -2,6 +2,10 @@ server:
   port: 8989
 
 spring:
+  profiles:
+    active: dev
+  application:
+    name: geteway-service
   cloud:
     gateway:
       routes:
@@ -38,5 +42,5 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 10000  #if the response not returned from service after 10 second redirect to fall back uri
+            timeoutInMilliseconds: 5000  #if the response not returned from service after 5 second redirect to fall back uri
 
