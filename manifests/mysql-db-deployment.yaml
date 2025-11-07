@@ -59,6 +59,13 @@ spec:
           ports:
             - containerPort: 3306  # Expose MySQL default port inside the container
               name: dbcommon #before was: mysql-order-payment
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi" #maximum resources the pod can use It won’t exceed this, preventing one pod from starving others.
+              cpu: "500m"   #maximum resources the pod can use It won’t exceed this, preventing one pod from starving others.
           volumeMounts:
             - name: mysql-order-payment-persistent-storage
               mountPath: /var/lib/mysql  # Where MySQL stores its data files
