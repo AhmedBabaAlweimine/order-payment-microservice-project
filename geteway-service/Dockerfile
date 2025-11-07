@@ -1,4 +1,4 @@
-FROM openjdk:8
+FROM openjdk:8u92-alpine
 EXPOSE 8761
 LABEL authors="aalweimine"
 ADD target/geteway-service-0.0.1-SNAPSHOT.jar  geteway-service-0.0.1-SNAPSHOT.jar

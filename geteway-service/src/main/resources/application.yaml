@@ -42,5 +42,5 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 5000  #if the response not returned from service after 5 second redirect to fall back uri
+            timeoutInMilliseconds: 10000  #if the response not returned from service after 5 second redirect to fall back uri
 

@@ -1,12 +1,6 @@
 server:
   port: 8082
 
-spring:
-  profiles:
-    active: prod
-  application:
-    name: payment-service
-
   jpa:
     hibernate:
       ddl-auto: update

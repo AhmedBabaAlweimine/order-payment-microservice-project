@@ -9,6 +9,9 @@ import com.alweimine.orderservice.entity.Order;
 import com.alweimine.orderservice.repository.OrderRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -18,14 +21,18 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RefreshScope
 public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
+    @Lazy
     private RestTemplate restTemplate;
 
+    @Value("${microservices.payment-service.endpoints.endpoint.uri}")
+    private String paymentServiceUri;
 
     public TransactionResponse addOrder(TransactionRequest transactionRequest) {
         Order orderEntity = modelMapper.map(transactionRequest.getOrderDto(), Order.class);
@@ -36,7 +43,7 @@ public class OrderService {
         paymentDto.setAmount(orderEntity.getPrice());
         //call Payement service to save payement
         ResponseEntity<PaymentDto> PaymentDtoResponseEntity
-                = restTemplate.postForEntity("http://PAYMENT-SERVICE/payment/doPayment", paymentDto, PaymentDto.class);
+                = restTemplate.postForEntity(paymentServiceUri, paymentDto, PaymentDto.class);                            //restTemplate.postForEntity(paymentServiceUri, paymentDto, PaymentDto.class);
         paymentDto = PaymentDtoResponseEntity.getBody();
         String message = paymentDto.getStatus().equalsIgnoreCase("success")
                 ? "payement passed" : "payment failed";
