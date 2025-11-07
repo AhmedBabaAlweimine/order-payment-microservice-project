@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: cloud-config-server-ms-app
-          image: cloud-config-server-service:latest # Nginx image from Docker Hub
+          image: cloud-config-server:latest # Nginx image from Docker Hub
           imagePullPolicy: IfNotPresent   #first search in local repo,if not specified alway will look in docker hub
           ports:
             - containerPort: 9196 # Port the container exposes
