@@ -1,3 +1,4 @@
+####THIS IS BREIF STEPS TO START JENKINS CONTAINER ON WSL WINDOWS TO CREATE CI PIPELINE FOR SPRING BOOT APP#####
 1-docker pull jenkins/jenkins:lts-jdk11
 
 #################Note###################
