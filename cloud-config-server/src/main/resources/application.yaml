@@ -13,5 +13,5 @@ spring:
         git:
           uri: https://github.com/AhmedBabaAlweimine/order-payment-microservice-project.git
           search-paths: profiles-cloud-config-server
-          default-label: feature/CONF-502
+          default-label: main #feature/CONF-502
 
