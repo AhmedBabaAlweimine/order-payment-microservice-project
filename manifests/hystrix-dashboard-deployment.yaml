@@ -18,6 +18,13 @@ spec:
           imagePullPolicy: IfNotPresent   #first search in local repo,if not specified alway will look in docker hub
           ports:
             - containerPort: 9195 # Port the container exposes
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi" #maximum resources the pod can use
+              cpu: "500m"   #maximum resources the pod can use
 
 ---
 
