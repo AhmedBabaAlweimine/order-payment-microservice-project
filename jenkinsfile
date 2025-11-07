@@ -1,4 +1,4 @@
-def services = ['order-service', 'payment-service','geteway-service','hystrix-dashboard','service-registry']
+def services = ['service-registry','cloud-config-server','geteway-service','order-service', 'payment-service','hystrix-dashboard']
 
 pipeline {
     agent any
