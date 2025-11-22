@@ -7,7 +7,11 @@ import com.alweimine.orderservice.dto.TransactionRequest;
 import com.alweimine.orderservice.dto.TransactionResponse;
 import com.alweimine.orderservice.entity.Order;
 import com.alweimine.orderservice.repository.OrderRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -34,7 +38,10 @@ public class OrderService {
     @Value("${microservices.payment-service.endpoints.endpoint.uri}")
     private String paymentServiceUri;
 
-    public TransactionResponse addOrder(TransactionRequest transactionRequest) {
+    private Logger logger = LoggerFactory.getLogger(OrderService.class);
+
+    public TransactionResponse addOrder(TransactionRequest transactionRequest) throws JsonProcessingException {
+        logger.info("OrderService:addOrder request {}", new ObjectMapper().writeValueAsString(transactionRequest));
         Order orderEntity = modelMapper.map(transactionRequest.getOrderDto(), Order.class);
         orderEntity = orderRepository.save(orderEntity);
 
@@ -45,6 +52,8 @@ public class OrderService {
         ResponseEntity<PaymentDto> PaymentDtoResponseEntity
                 = restTemplate.postForEntity(paymentServiceUri, paymentDto, PaymentDto.class);                            //restTemplate.postForEntity(paymentServiceUri, paymentDto, PaymentDto.class);
         paymentDto = PaymentDtoResponseEntity.getBody();
+        logger.info("Payement-Service response from OrderService Rest call: {}", new ObjectMapper().writeValueAsString(paymentDto));
+
         String message = paymentDto.getStatus().equalsIgnoreCase("success")
                 ? "payement passed" : "payment failed";
 
@@ -52,11 +61,13 @@ public class OrderService {
     }
 
     public List<OrderDto> getAllOrders() {
+        logger.info("OrderService:getAllOrders request {}");
         List<Order> allOrdes = orderRepository.findAll();
         return allOrdes.stream().map(order -> modelMapper.map(order, OrderDto.class)).collect(Collectors.toList());
     }
 
-    public OrderDto geOrder(Long id) {
+    public OrderDto getOrder(Long id) throws JsonProcessingException {
+        logger.info("OrderService:geOrder request {}", new ObjectMapper().writeValueAsString(id));
         Optional<Order> order = orderRepository.findById(id);
         return order.map(value -> modelMapper.map(value, OrderDto.class)).orElse(null);
     }
