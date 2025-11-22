@@ -6,3 +6,7 @@ spring:
     username: root
     password: ahmed
 
+logging:
+  file: C:/Users/Q Ahmed/Downloads/logs/elks-log.log
+
+

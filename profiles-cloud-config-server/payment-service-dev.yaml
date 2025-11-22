@@ -6,3 +6,6 @@ spring:
     url: jdbc:mysql://localhost:3306/imdbnaukri
     username: root
     password: ahmed
+
+logging:
+  file: C:/Users/Q Ahmed/Downloads/logs/elks-log.log
