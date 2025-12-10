@@ -20,11 +20,13 @@ this makes Docker socket point inside Minikube, so all images built by Jenkins a
   jenkins/jenkins:lts-jdk11
 
 if contrainer exist already : docker start jenkins-container
-3-take passwrd: 1d14765dd4b2455ebdc71ed6d43a94f1
+3-take passwrd: 
 4-run localhost:8080 : if not working use in wsl terminal: hostname -I use one of IP+8080
 5-install pulgin enter user:ahmed,password:ahmed
 6-create pipe line , shouse github+maven
-7-coppy token(classic) from github to allow jenkins clone repositories: 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 and add create new credentail in Jenkins: usernameGit and the tocken as pssword
+7-coppy token(classic) from github to allow jenkins clone repositories: 
+
+and add create new credentail in Jenkins: usernameGit and the tocken as pssword
 8-run build if you have problem with maven: 
   
  option 1: first check if you have and make install automatic of jdk and maven in Global Tool Config:
